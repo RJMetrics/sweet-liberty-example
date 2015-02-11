@@ -1,0 +1,15 @@
+pom.xml
+pom.xml.asc
+*jar
+/lib/
+/classes/
+/target/
+.lein-deps-sum
+.lein-repl-history
+.lein-failures
+.lein-plugins/
+.nrepl-port
+.nrepl-repl-history
+._*
+*.asc
+/logs/
