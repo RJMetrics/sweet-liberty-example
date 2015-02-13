@@ -30,7 +30,7 @@
   (sc/handler (mock-req/request method url)))
 
 (with-state-changes [(before :facts (db/initialize-db sc/db-spec
-                                                      sc/config
+                                                      sc/resource-config
                                                       sc/init-data))]
   (fact-group "about GET /dogs"
               (fact "collection route return status 200"

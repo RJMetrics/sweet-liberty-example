@@ -9,7 +9,14 @@
             [liberator.dev :refer [wrap-trace]])
   (:gen-class))
 
-(def config
+;; The specification for connecting to our database.
+;; For this demo, we're using an in-memory db.
+;;; Typically, this would point to an RDBMS (like MySQL or Postgres)
+(def db-spec
+  {:subprotocol "hsqldb"
+   :subname "mem:sweet-lib-example"})
+
+(def resource-config
   "Sweet-Liberty config values"
   {:dogs {:table {:table-name :dogs
                   :attributes [:id
@@ -18,6 +25,10 @@
                                ;; additional db columns go here
                                ]
                   :primary-key :id}}})
+
+(def base-config
+  {:return-exceptions? true
+   :db-spec db-spec})
 
 (def init-data
   "This is sample data to populate db with. It is a map where the key is the
@@ -31,25 +42,24 @@
           [5 "Taco" "chihuahua"]
           [6 "Brody" "corgi"]]})
 
-;; The specification for connecting to our database.
-;; For this demo, we're using an in-memory db.
-;;; Typically, this would point to an RDBMS (like MySQL or Postgres)
-(def db-spec
-  {:subprotocol "hsqldb"
-   :subname "mem:sweet-lib-example"})
-
 ;; Build and populate in-memory database
-(db/initialize-db db-spec config init-data)
+(db/initialize-db db-spec resource-config init-data)
 
 ;; You can provide liberator configuration to sweet-liberty.
 ;; In this case, we are only setting the available media types.
 ;; see http://liberator... for details
 (def liberator-config {:available-media-types ["application/json" "text/html"]})
 
+(defn assemble-config
+  [resource-name & {:keys [sweet-liberty liberator]}]
+  {:options (merge base-config
+                   (resource-name resource-config)
+                   sweet-liberty)
+   :liberator-config (merge liberator-config liberator)})
+
 (defroutes app
   (GET "/dogs" []
-       (-> {:options (assoc (:dogs config) :db-spec db-spec :return-exceptions? true)
-            :liberator-config liberator-config}
+       (-> (assemble-config :dogs)
            sl/add-exists
            sl/add-get
            (sl/add-ok-handler :collection? true)
@@ -60,8 +70,7 @@
            (sl/add-authorization (constantly true))
            sl/make-resource))
   (POST "/dogs" []
-        (-> {:options (assoc (:dogs config) :db-spec db-spec)
-             :liberator-config liberator-config}
+        (-> (assemble-config :dogs)
             (sl/add-exists :id)
             (sl/add-ok-handler :collection? true)
             sl/add-post
@@ -69,16 +78,16 @@
             (sl/add-authorization (constantly true))
             sl/make-resource))
   (GET "/dogs/:id" [id]
-       (-> {:options (assoc (:dogs config) :db-spec db-spec :url-params {:id id})
-            :liberator-config liberator-config}
+       (-> (assemble-config :dogs
+                            :sweet-liberty {:url-params {:id id}})
            (sl/add-exists :id)
            sl/add-get
            (sl/add-ok-handler :collection? false)
            (sl/add-authorization (constantly true))
            sl/make-resource))
   (PUT "/dogs/:id" [id]
-       (-> {:options (assoc (:dogs config) :db-spec db-spec :url-params {:id id})
-            :liberator-config liberator-config}
+       (-> (assemble-config :dogs
+                            :sweet-liberty {:url-params {:id id}})
            (sl/add-exists :id)
            (sl/add-ok-handler :collection? false)
            (sl/add-put :id)
