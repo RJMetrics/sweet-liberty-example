@@ -10,7 +10,7 @@ Drop some knowledge on your terminal:
 
 ```
 $ git clone https://github.com/RJMetrics/sweet-liberty-example.git
-$ cd cd Sweet-Liberty-example
+$ cd Sweet-Liberty-example
 $ lein ring server-headless
 ```
 
