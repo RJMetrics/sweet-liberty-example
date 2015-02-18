@@ -1,6 +1,6 @@
 # Sweet Liberty Example
 
-This is a simple example project meant to demonstrate how to use Sweet Liberty [(github repo)](https://github.com/RJMetrics/sweet-liberty). Here's a [blog post](http://rjmetrics.com/##############) about the library.
+This is a simple example project meant to demonstrate how to use Sweet Liberty [(github repo)](https://github.com/RJMetrics/sweet-liberty). Here's a [blog post](https://blog.rjmetrics.com/2015/02/15/sweet-liberty-set-your-data-free-with-clojure-and-rest/) about the library.
 
 This application exposes a RESTful interface that can be used to perform CRUD operations on *dog* records contained in an in-memory database. This example can be used as a template for more sophicated projects built using Sweet Liberty.
 
