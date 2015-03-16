@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/java.jdbc "0.3.3"]
                  [org.clojure/data.json "0.2.4"]
-                 [com.rjmetrics.developers/sweet-liberty "0.1.0-SNAPSHOT"]
+                 [com.rjmetrics.developers/sweet-liberty "0.1.1"]
                  [lib-noir "0.8.0" :exclusions [hiccup]]
                  [compojure "1.1.6"]
                  [ring/ring-core "1.2.1"]
